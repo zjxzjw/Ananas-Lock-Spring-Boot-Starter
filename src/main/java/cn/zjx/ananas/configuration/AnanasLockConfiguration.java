@@ -1,6 +1,7 @@
 package cn.zjx.ananas.configuration;
 
 import cn.zjx.ananas.annotation.EnableAnanasLock;
+import cn.zjx.ananas.aspect.AnanasLockAspect;
 import cn.zjx.ananas.constant.StorageTypeEnum;
 import cn.zjx.ananas.property.AnanasLockProperty;
 import cn.zjx.ananas.utils.AnanasLockUtil;
@@ -11,6 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportAware;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
@@ -52,5 +54,16 @@ public class AnanasLockConfiguration implements ImportAware {
         } else {
             return new AnanasLockUtilLocalImpl();
         }
+    }
+
+@Bean(name = "cn.zjx.ananas.AnanasLockAspect")
+    public AnanasLockAspect ananasLockAspect(AnanasLockProperty ananasLockProperty,
+                                            AnanasLockUtil ananasLockUtil) {
+        int order = Ordered.LOWEST_PRECEDENCE;
+        if (enableAnanasLock != null) {
+            order = enableAnanasLock.getNumber("order");
+        }
+
+        return new AnanasLockAspect(ananasLockProperty, ananasLockUtil, order);
     }
 }

@@ -2,11 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>cn.zjx</groupId>
-    <artifactId>Ananas-Lock</artifactId>
+
+    <groupId>io.github.zjxzjw</groupId>
+    <artifactId>ananas-lock-spring-boot-starter</artifactId>
     <version>0.0.1</version>
-    <name>ananas-lock-spring-boot-starter</name>
-    <description>ananas-lock-spring-boot-starter</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -14,6 +13,35 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.6.13</spring-boot.version>
     </properties>
+
+    <packaging>jar</packaging>
+
+    <name>ananas-lock-spring-boot-starter</name>
+
+    <description>ananas-lock-spring-boot-starter</description>
+    <url>https://gitee.com/zjxzjw/ananas-lock-spring-boot-starter</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>zjx</name>
+            <email>2648609927@qq.com</email>
+            <organization>Sonatype</organization>
+            <organizationUrl>http://www.sonatype.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://gitee.com/zjxzjw/ananas-lock-spring-boot-starter</url>
+        <connection>scm:https://gitee.com/zjxzjw/ananas-lock-spring-boot-starter.git</connection>
+        <developerConnection>scm:git:ssh://git@gitee.com:zjxzjw/ananas-lock-spring-boot-starter.git
+        </developerConnection>
+    </scm>
 
     <dependencies>
         <dependency>
@@ -46,6 +74,7 @@
         </dependency>
     </dependencies>
 
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -57,5 +86,112 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!--指定JDK版本-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <!-- 指定maven编译的jdk版本。对于JDK8，写成8或者1.8都可以 -->
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+
+            <!--发布源码-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Javadoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <charset>UTF-8</charset>
+                    <encoding>UTF-8</encoding>
+                    <docencoding>UTF-8</docencoding>
+                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!--用于发布：插件和仓库等信息-->
+    <profiles>
+        <profile>
+            <id>io.github.zjxzjw</id>
+
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>io.github.zjxzjw</id>
+                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>io.github.zjxzjw</id>
+                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2</url>
+                </repository>
+            </distributionManagement>
+
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <!--发布到staging-->
+                        <plugin>
+                            <groupId>org.sonatype.plugins</groupId>
+                            <artifactId>nexus-staging-maven-plugin</artifactId>
+                            <version>1.6.8</version>
+                            <extensions>true</extensions>
+                            <configuration>
+                                <serverId>io.github.zjxzjw</serverId>
+                                <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                                <!--自动release-->
+                                <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            </configuration>
+                        </plugin>
+
+                        <!--gpg加密-->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <version>1.6</version>
+                            <executions>
+                                <execution>
+                                    <id>sign-artifacts</id>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

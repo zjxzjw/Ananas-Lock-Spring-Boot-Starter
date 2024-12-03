@@ -1,5 +1,7 @@
 package cn.zjx.ananas.annotation;
 
+import cn.zjx.ananas.exception.LockFailException;
+
 import java.lang.annotation.*;
 
 /**
@@ -26,7 +28,10 @@ public @interface AnanasLock {
     /**
      * 错误提示
      */
-    String errorMsg() default "";
+    String errorMsg() default "请求频繁，请稍后重试！";
 
-    Class<?> exception();
+    /**
+     * 锁获取失败异常
+     */
+    Class<? extends Exception> exception() default LockFailException.class;
 }
